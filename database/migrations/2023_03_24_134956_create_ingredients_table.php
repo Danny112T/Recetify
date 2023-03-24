@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cat_ingredients', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('image_path');
+        Schema::create('ingredients', function (Blueprint $table) {
+            $table->float('quantity');
             $table->float('calories')->nullable();
             $table->float('fat')->nullable();
             $table->float('carbs')->nullable();
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cat_ingredients');
+        Schema::dropIfExists('ingredients');
     }
 };
