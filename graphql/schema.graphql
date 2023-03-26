@@ -20,14 +20,20 @@ type Query {
       name: String @where(operator: "like")
     ): [User!]! @paginate(defaultCount: 10)
 
+    "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
 }
 
 type Mutation {
+    "Crea un Usuario Nuevo"
     createUser(input: createUserInput! @spread): User!
+    "Actualiza un Usuario Ya Existente"
     updateUser(id: ID!, email: String, password: String): User! @update
+    "Elimina un Usuario"
     deleteUser(id: ID): User! @delete
+    "Iniciar Sesión en la App Web"
     login(input: loginInput! @spread): Session!
+    "Cerrar Sesión"
     logout: Session!
 }
 
@@ -53,19 +59,43 @@ type User {
 }
 
 type Session {
+    "Usuario obligatorio"
     user: User!
+    "El token de acceso a la App Web"
     accessToken: String
 }
 
+type recipes {
+    title: String!
+    description: String
+    image_pf_path: String!
+    type_food: type!
+    time_food: time!
+    diet: diet!
+    prep_time: float!
+    calories: float
+    fat: float
+    carbs: float
+    proteins: float
+    rate: float!
+}
+
 input createUserInput @validator {
+    "Nombre del usuario"
     name: String!
+    "Apellido(s) del usuario"
     lastname: String!
+    "Un correo electronico valido y unico"
     email: String!
+    "Una contraseña con minimo de 6 caracteres, una mayuscula, una minuscula y un caracter especial"
     password: String!
+    "Una fecha de cumpleaños de formato 'Año-Mes-Dia', Ej. '2002-02-11'. "
     birthday: Date!
 }
 
 input loginInput {
+    "Un correo electronico valido"
     email: String!
+    "La contraseña"
     password: String!
 }

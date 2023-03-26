@@ -14,17 +14,27 @@ return new class extends Migration
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
             $table->string('title')->max(200);
-            $table->text('description')->nullable();
-            $table->string('image_pf_path');
-            $table->enum('type_food',['mexicana','americana','italiana','china']);
-            $table->enum('time_food',['desayuno','comida','cena','colacion']);
-            $table->enum('diet',['omnivoro','Ovo-lacteo Vegetariano', 'Vegetariano', 'crudivegana']);
-            $table->float('prep_time');
+            $table->text('description')->nullable()->max(1000);
+            $table->string('image_pf_path')->nullable();
+            $table->enum('type_food',[
+                'Mexicana',
+                'Americana',
+                'Italiana',
+                'China',
+            ]);
+            $table->enum('time_food',['Desayuno','Comida','Cena','Colacion']);
+            $table->enum('diet',[
+                'Omnivoro',
+                'Ovo-lacteo Vegetariano',
+                'Vegetariano',
+                'Crudivegana',
+            ]);
+            $table->float('prep_time')->startingValue(0.00);
             $table->float('calories')->nullable();
             $table->float('fat')->nullable();
             $table->float('carbs')->nullable();
             $table->float('proteins')->nullable();
-            $table->float('rate');
+            $table->float('rate')->startingValue(5.00);
             $table->timestamps();
         });
     }
