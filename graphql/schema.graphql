@@ -39,3 +39,15 @@ type User {
     "When the account was last updated."
     updated_at: DateTime!
 }
+
+type mutation {
+    createUser(input: createUserInput! @spread
+    ): User! @validator
+}
+
+input createUserInput @validator(class: "App\\GraphQL\\Validators\\Mutation\\CreateUserValidator") {
+    name: String!
+    lastname: String!
+    email: String!
+    password: String!
+}
