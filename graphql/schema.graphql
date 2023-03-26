@@ -42,10 +42,10 @@ type User {
 
 type mutation {
     createUser(input: createUserInput! @spread
-    ): User! @validator
+    ): User!
 }
 
-input createUserInput @validator(class: "App\\GraphQL\\Validators\\Mutation\\CreateUserValidator") {
+input createUserInput @validator {
     name: String!
     lastname: String!
     email: String!
