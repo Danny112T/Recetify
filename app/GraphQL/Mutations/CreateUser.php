@@ -17,7 +17,8 @@ final class CreateUser
         $user->name = $args['name'];
         $user->lastname = $args['lastname'];
         $user->email = $args['email'];
-        $user->password = Hash::make($args['password']) ;
+        $user->password = Hash::make($args['password']);
+        $user->birthday= $args['birthday'];
         $user->save();
 
         return $user;
