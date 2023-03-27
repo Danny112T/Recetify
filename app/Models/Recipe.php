@@ -13,7 +13,7 @@ class Recipe extends Model
         'title',
         'description',
         'image_pf_path',
-        'type_food',
+        'origen_food',
         'time_food',
         'diet',
         'prep_time',

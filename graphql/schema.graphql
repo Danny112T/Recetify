@@ -2,6 +2,8 @@
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 "A date string with format 'y-m-d'. e.g. '2002-12-22.'"
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+"A upload string"
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
@@ -31,10 +33,12 @@ type Mutation {
     updateUser(id: ID!, email: String, password: String): User! @update
     "Elimina un Usuario"
     deleteUser(id: ID): User! @delete
-    "Iniciar Sesión en la App Web"
+    "Mutación para Iniciar Sesión en la App Web"
     login(input: loginInput! @spread): Session!
-    "Cerrar Sesión"
+    "Mutación para Cerrar Sesión"
     logout: Session!
+    "Mutación para crear receta"
+    createRecipe(input: createRecipeInput! @spread): Recipe!
 }
 
 "Account of a person who utilizes this application."
@@ -58,6 +62,7 @@ type User {
     updated_at: DateTime!
 }
 
+"Sesión"
 type Session {
     "Usuario obligatorio"
     user: User!
@@ -65,18 +70,31 @@ type Session {
     accessToken: String
 }
 
-type recipes {
+"Receta"
+type Recipe {
+    "Titulo de la receta"
     title: String!
+    "Descripcion de la receta"
     description: String
+    "Imagen principal de la receta"
     image_pf_path: String!
-    type_food: type!
+    "De donde es la Receta. Ej, Mexicana"
+    origen_food: origen!
+    "En que tiempo es la receta. Ej, Desayuno"
     time_food: time!
+    "Tipo de dieta de la receta. Ej, Omnivoro"
     diet: diet!
+    "Tiempo de preparación de la receta en float."
     prep_time: float!
+    "Cantidad de calorias que contiene la receta"
     calories: float
+    "Cantidad de grasas que contiene la receta"
     fat: float
+    "Cantidad de carbohidratos que contiene la receta"
     carbs: float
+    "Cantidad de proteinas que contiene la receta"
     proteins: float
+    "Calificación promedio de la receta"
     rate: float!
 }
 
@@ -98,4 +116,68 @@ input loginInput {
     email: String!
     "La contraseña"
     password: String!
+}
+
+input createRecipeInput @validator {
+    "Titulo de la receta"
+    title: String!
+    "descripcion de la receta"
+    description: String
+    "Imagen Principal de la receta"
+    image_pf_path: Upload!
+    "Origen de comida. Ej, Mexicana"
+    origen_food: String!
+    "Tiempo de comida. Ej, Desayuno"
+    time_food: String!
+    "Tipo de dieta. Ej. Vegano"
+    diet: String!
+    "Tiempo de preparacion para la receta"
+    prep_time: float
+    "Cantidad de calorias en la receta"
+    calories: float
+    "Cantidad de grasas en la receta"
+    fat: float
+    "Cantidad de carbohidratos en la receta"
+    carbs: float
+    "cantidad de proteinas en la receta"
+    proteins: float
+}
+
+"Tipos de comida, dependiendo de su origen"
+enum origen
+{
+    "Comida Mexiana."
+    Mexicana @enum(value: "Mexicana")
+    "Comida Americana."
+    Americana @enum(vaule: "Americana")
+    "Comida Italiana."
+    Italiana @enum(value: "Italiana")
+    "Comida China."
+    China @enum(valie: "China")
+    "Se iran agregando más tipos de comida"
+}
+
+"Los tiempos de la comida. Ej, Desayuno."
+enum time
+{
+    "Tiempo Desayuno"
+    Desayuno @enum(value: "Desayuno")
+    "Tiempo Comida"
+    Comida @enum(value: "Comida")
+    "Tiempo Cena"
+    Cena @enum(value: "Cena")
+    "Tiempo Colación"
+    Colacion @enum(value: "Colacion")
+}
+
+enum diet
+{
+    "Dieta Omnivora"
+    Omnivoro @enum(value "Omnivoro")
+    "Dieta Ovo-Lactea Vegetariana"
+    OLV @enum(value "Ovo-lacteo Vegetariano")
+    "Dieta vegetariana"
+    Vegetariano @enum(value: "Vegetariano")
+    "Dieta Crudivegana"
+    Crudivegetariana @enum(value: "Crudivegetariana")
 }

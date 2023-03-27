@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('title')->max(200);
             $table->text('description')->nullable()->max(1000);
             $table->string('image_pf_path')->nullable();
-            $table->enum('type_food',[
+            $table->enum('origen_food',[
                 'Mexicana',
                 'Americana',
                 'Italiana',
                 'China',
             ]);
-            $table->enum('time_food',['Desayuno','Comida','Cena','Colacion']);
+            $table->enum('time_food',['Desayuno','Comida','Cena','Colacion','Aperitivo']);
             $table->enum('diet',[
                 'Omnivoro',
                 'Ovo-lacteo Vegetariano',
