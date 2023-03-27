@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update -y
 
 # Install idk
-RUN curl -sl https://deb.nodesource.com/setup_8.x | bash -- \
+RUN curl -sl https://deb.nodesource.com/setup_16.x | bash -- \
     && apt-get install -y nodejs \
     && apt-get autoremove -y
 
@@ -36,6 +36,6 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/html/
 
 USER $user
