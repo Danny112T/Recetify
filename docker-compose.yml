@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+
+#The Application
+
+    app:
+        image: recetify_app
+        container_name: recetify_app
+
+        build:
+
+            context: ./
+
+            dockerfile: dockerfile
+            args:
+                user: Danny
+                uid: 1000
+
+        working_dir: /var/www
+
+        volumes:
+            - ./app:/var/www/app
+            - ./config:/var/www/config
+            - ./database:/var/www/database
+            - ./graphql:/var/www/graphql
+            - ./routes:/var/www/routes
+            - ./resources:/var/www/resources
+            - ./tests:/var/www/test
+            - ./storage:/var/www/storage
+            - ./public:/var/www/public
+            - ./composer.lock:/var/www/composer.lock
+            - ./composer.json:/var/www/composer.json
+        env_file: .env
+
+        ports:
+            - 8000:9000
