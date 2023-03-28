@@ -60,6 +60,9 @@ type User {
 
     "When the account was last updated."
     updated_at: DateTime!
+
+    "La fecha de cumpleaños"
+    birthday: Date!
 }
 
 "Sesión"

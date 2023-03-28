@@ -1,36 +1,5 @@
 version: '3'
 services:
-# The Database
-
-    dbdata:
-        container_name: mysql_database
-        image: mysql:8.0
-        restart: unless-stopped
-
-        volumes:
-            - ./docker-compose/dev/mysql:/docker-entrypoint-initdb.d
-
-        environment:
-
-            - “MYSQL_USER=root”
-
-            - “MYSQL_PASSWORD=”
-
-            - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
-
-        ports:
-
-            - 3300:3300
-
-    nginx:
-        image: nginx:1.17-alpine
-        container_name: recetify-nginx
-        restart: unless-stopped
-        ports:
-            - 8081:80
-        volumes:
-            - ./:/var/www
-            - ./docker-compose/nginx:/etc/nginx/conf.d
 
 
 #The Application
@@ -38,7 +7,6 @@ services:
     app:
         image: recetify_app
         container_name: recetify_app
-        command: sh -c "php artisan storage:link && php artisan octane:start --watch --server=\"swoole\" --host=0.0.0.0 --port=9000"
 
         build:
 
@@ -48,6 +16,8 @@ services:
             args:
                 user: Danny
                 uid: 1000
+
+        working_dir: /var/www
 
         volumes:
             - ./app:/var/www/app
@@ -64,4 +34,4 @@ services:
         env_file: .env
 
         ports:
-            - 9000:9501
+            - 8000:9000
