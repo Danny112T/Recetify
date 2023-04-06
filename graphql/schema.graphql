@@ -87,18 +87,18 @@ type Recipe {
     time_food: time!
     "Tipo de dieta de la receta. Ej, Omnivoro"
     diet: diet!
-    "Tiempo de preparación de la receta en float."
-    prep_time: float!
+    "Tiempo de preparación de la receta en Float."
+    prep_time: Float!,
     "Cantidad de calorias que contiene la receta"
-    calories: float
+    calories: Float,
     "Cantidad de grasas que contiene la receta"
-    fat: float
+    fat: Float,
     "Cantidad de carbohidratos que contiene la receta"
-    carbs: float
+    carbs: Float,
     "Cantidad de proteinas que contiene la receta"
-    proteins: float
+    proteins: Float,
     "Calificación promedio de la receta"
-    rate: float!
+    rate: Float!
 }
 
 input createUserInput @validator {
@@ -135,15 +135,15 @@ input createRecipeInput @validator {
     "Tipo de dieta. Ej. Vegano"
     diet: String!
     "Tiempo de preparacion para la receta"
-    prep_time: float
+    prep_time: Float,
     "Cantidad de calorias en la receta"
-    calories: float
+    calories: Float,
     "Cantidad de grasas en la receta"
-    fat: float
+    fat: Float,
     "Cantidad de carbohidratos en la receta"
-    carbs: float
+    carbs: Float,
     "cantidad de proteinas en la receta"
-    proteins: float
+    proteins: Float
 }
 
 "Tipos de comida, dependiendo de su origen"
@@ -157,7 +157,6 @@ enum origen
     Italiana @enum(value: "Italiana")
     "Comida China."
     China @enum(valie: "China")
-    "Se iran agregando más tipos de comida"
 }
 
 "Los tiempos de la comida. Ej, Desayuno."
@@ -176,9 +175,9 @@ enum time
 enum diet
 {
     "Dieta Omnivora"
-    Omnivoro @enum(value "Omnivoro")
+    Omnivoro @enum(value: "Omnivoro")
     "Dieta Ovo-Lactea Vegetariana"
-    OLV @enum(value "Ovo-lacteo Vegetariano")
+    OLV @enum(value: "Ovo-lacteo Vegetariano")
     "Dieta vegetariana"
     Vegetariano @enum(value: "Vegetariano")
     "Dieta Crudivegana"
