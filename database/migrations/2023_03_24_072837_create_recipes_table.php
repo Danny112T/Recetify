@@ -25,7 +25,7 @@ return new class extends Migration
             $table->enum('time_food',['Desayuno','Comida','Cena','Colacion','Aperitivo']);
             $table->enum('diet',[
                 'Omnivoro',
-                'Ovo-lacteo Vegetariano',
+                'OLV',
                 'Vegetariano',
                 'Crudivegana',
             ]);

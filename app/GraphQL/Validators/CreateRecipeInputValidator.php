@@ -14,8 +14,8 @@ final class CreateRecipeInputValidator extends Validator
     public function rules(): array
     {
         return [
-            "title" => ['require', 'max=200'],
-            "description" => ['max=1000'],
+            "title" => ['required', 'max:200'],
+            "description" => ['max:1000'],
         ];
     }
 }

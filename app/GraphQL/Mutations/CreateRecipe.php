@@ -12,12 +12,12 @@ final class CreateRecipe
      */
     public function __invoke($_, array $args)
     {
-        $file = $args['image_pf_path'];
-        $file->storePublicly('public/uploads');
+        //$file = $args['image_pf_path'];
+        //$file->storePublicly('public/uploads');
         $recipe = new Recipe();
         $recipe->title = $args['title'];
         $recipe->description = $args['description'];
-        $recipe->image_pf_path = $file;
+        // $recipe->image_pf_path = $file;
         $recipe->origen_food = $args['origen_food'];
         $recipe->time_food = $args['time_food'];
         $recipe->diet = $args['diet'];
@@ -26,7 +26,7 @@ final class CreateRecipe
         $recipe->fat = $args['fat'];
         $recipe->carbs = $args['carbs'];
         $recipe->proteins = $args['proteins'];
-
+        $recipe->rate = 5.0;
         $recipe->save();
     }
 }
