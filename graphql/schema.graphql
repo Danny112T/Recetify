@@ -26,7 +26,7 @@ type Query {
     recipe(
         "search by primary key."
         id: ID @eq @rules(apply: ["prohibits:title", "required_without:title"])
-    ): Recipe @find
+    ): Recipe @find #@whereAuth(relation: "user")
 
     recipes(
         "FIlters by title. Accepts SQL like wildcards '%' and '_'."
@@ -37,7 +37,7 @@ type Query {
         prep_time: Float @where(operator: "=")
         calories: Float @where(operator: "=")
         rate: Float @where(operator: "=")
-    ): [Recipe!]! @paginate(defaultCount: 10)
+    ): [Recipe!]! @paginate(defaultCount: 10) #@whereAuth(relation: "user")
 
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
@@ -55,7 +55,7 @@ type Mutation {
     "Mutación para Cerrar Sesión"
     logout: Session!
     "Mutación para crear receta"
-    createRecipe(input: createRecipeInput! @spread): Recipe!
+    createRecipe(input: createRecipeInput! @spread): Recipe! @create @can(ability: "create", injectArgs: true)
     "Actualiza una Receta Ya Existente"
     updateRecipe(
         id: ID!,
@@ -70,9 +70,9 @@ type Mutation {
         fat: Float,
         carbs: Float,
         proteins: Float
-    ): Recipe! @update
+    ): Recipe! @update @can(ability: "update", find: "id")
     "Elimina una Receta"
-    deleteRecipe(id: ID @whereKey): Recipe! @delete
+    deleteRecipe(id: ID @whereKey): Recipe! @delete @can(ability: "delete", find:"id")
 }
 
 "Account of a person who utilizes this application."
@@ -97,6 +97,9 @@ type User {
 
     "La fecha de cumpleaños"
     birthday: Date!
+
+    "Tiene muchas tareas"
+    recipes:[Recipe!]! @hasMany
 }
 
 "Sesión"
@@ -132,7 +135,9 @@ type Recipe {
     "Cantidad de proteinas que contiene la receta"
     proteins: Float,
     "Calificación promedio de la receta"
-    rate: Float!
+    rate: Float
+    "El usuario que creo la receta"
+    user: User @belongsTo
 }
 
 input createUserInput @validator {
@@ -146,6 +151,11 @@ input createUserInput @validator {
     password: String!
     "Una fecha de cumpleaños de formato 'Año-Mes-Dia', Ej. '2002-02-11'. "
     birthday: Date!
+}
+
+input CreateUserBelongsTo {
+    connect: ID
+    create: createUserInput
 }
 
 input loginInput {
@@ -178,6 +188,12 @@ input createRecipeInput @validator {
     carbs: Float,
     "cantidad de proteinas en la receta"
     proteins: Float
+    "El usuario que creo la receta"
+    user: CreateUserBelongsTo
+}
+
+input createRecipeHasMany {
+    create:[createRecipeInput!]!
 }
 
 "Tipos de comida, dependiendo de su origen"
@@ -211,7 +227,7 @@ enum diet
     "Dieta Omnivora"
     Omnivoro @enum(value: "Omnivoro")
     "Dieta Ovo-Lactea Vegetariana"
-    OLV @enum(value: "Ovo-lacteo Vegetariano")
+    OLV @enum(value: "OLV")
     "Dieta vegetariana"
     Vegetariano @enum(value: "Vegetariano")
     "Dieta Crudivegana"
