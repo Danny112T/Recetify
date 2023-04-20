@@ -102,16 +102,10 @@ type User {
     recipes:[Recipe!]! @hasMany
 }
 
-"Sesión"
-type Session {
-    "Usuario obligatorio"
-    user: User!
-    "El token de acceso a la App Web"
-    accessToken: String
-}
-
 "Receta"
 type Recipe {
+    "Id"
+    id: ID!
     "Titulo de la receta"
     title: String!
     "Descripcion de la receta"
@@ -138,6 +132,34 @@ type Recipe {
     rate: Float
     "El usuario que creo la receta"
     user: User @belongsTo
+}
+
+"Sesión"
+type Session {
+    "Usuario obligatorio"
+    user: User!
+    "El token de acceso a la App Web"
+    accessToken: String
+}
+
+"Comentarios"
+type Comment {
+    "Id"
+    id: ID!
+    "Comentario"
+    commentario: String!
+    "Calificacion"
+    rating: Float,
+    "receta"
+    Recipe: Recipe @belongsTo
+}
+
+type Step {
+    "descripcion"
+    descripcion: String!
+    "Direccion de Imagen"
+    imagen_path: String
+    Recipe: Recipe @belongsTo
 }
 
 input createUserInput @validator {
