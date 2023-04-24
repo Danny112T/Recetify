@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rates', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->float('rating');
-            $table->string('description')->nullable();
+            $table->integer('recipe_id')->unsigned();
+            $table->string('comentario');
+            $table->float('rating')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rates');
+        Schema::dropIfExists('comments');
     }
 };

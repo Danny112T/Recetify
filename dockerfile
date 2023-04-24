@@ -25,14 +25,23 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create system user to run Composer and Artisan Commands
-RUN adduser -G www-data,root -u $uid -D -h /home/$user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
-
-# Set working directory
-WORKDIR /var/www/
+# Copiar los archivos de la aplicación
 COPY . /var/www/
-RUN composer install
 
-USER $user
+RUN mkdir -p /var/www/bootstrap/cache && \
+    chmod -R 777 /var/www/bootstrap/cache
+
+# Establecer el directorio de trabajo
+WORKDIR /var/www/
+
+# Instalar las dependencias de Laravel
+RUN composer install --no-interaction --no-scripts --prefer-dist
+
+# Ejecutar los comandos de consola de Artisan
+CMD ["php", "artisan", "serve", "--host", "0.0.0.0"]
+
+# Establecer el usuario predeterminado
+USER www-data
+
+# Exponer el puerto 9000 para php-fpm
+EXPOSE 8000

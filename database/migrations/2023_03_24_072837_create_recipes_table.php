@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned();
             $table->string('title')->max(200);
             $table->text('description')->nullable()->max(1000);
             $table->string('image_pf_path')->nullable();
@@ -25,7 +26,7 @@ return new class extends Migration
             $table->enum('time_food',['Desayuno','Comida','Cena','Colacion','Aperitivo']);
             $table->enum('diet',[
                 'Omnivoro',
-                'Ovo-lacteo Vegetariano',
+                'OLV',
                 'Vegetariano',
                 'Crudivegana',
             ]);
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->float('fat')->nullable();
             $table->float('carbs')->nullable();
             $table->float('proteins')->nullable();
-            $table->float('rate')->startingValue(5.00);
+            $table->float('rate')->startingValue(5.00)->nullable();
             $table->timestamps();
         });
     }

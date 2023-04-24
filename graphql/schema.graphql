@@ -22,6 +22,33 @@ type Query {
       name: String @where(operator: "like")
     ): [User!]! @paginate(defaultCount: 10)
 
+    "Find a single Recipe by an identifying attribute."
+    recipe(
+        "search by primary key."
+        id: ID @eq @rules(apply: ["prohibits:title", "required_without:title"])
+    ): Recipe @find #@whereAuth(relation: "user")
+
+    recipes(
+        "FIlters by title. Accepts SQL like wildcards '%' and '_'."
+        title: String @where(operator: "like")
+        origen_food: origen @where(operator: "like")
+        time_food: time @where(operator: "like")
+        diet: String @where(operator: "like")
+        prep_time: Float @where(operator: "=")
+        calories: Float @where(operator: "=")
+        rate: Float @where(operator: "=")
+    ): [Recipe!]! @paginate(defaultCount: 10) #@whereAuth(relation: "user")
+
+    step(
+        "search by primary key"
+        id: ID @eq @rules(apply: ["prohibits:description", "required_without:description"])
+    ): Step @find
+
+    steps(
+        "filters by recipe. Accepts SQL LIKE wildcards '%' and '_'."
+        description: String
+    ): [Step!]! @paginate(defaultCount: 10)
+
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
 }
@@ -29,16 +56,42 @@ type Query {
 type Mutation {
     "Crea un Usuario Nuevo"
     createUser(input: createUserInput! @spread): User!
+
     "Actualiza un Usuario Ya Existente"
     updateUser(id: ID!, email: String, password: String): User! @update
+
     "Elimina un Usuario"
-    deleteUser(id: ID): User! @delete
+    deleteUser(id: ID @whereKey): User! @delete
+
     "Mutación para Iniciar Sesión en la App Web"
     login(input: loginInput! @spread): Session!
+
     "Mutación para Cerrar Sesión"
     logout: Session!
+
     "Mutación para crear receta"
-    createRecipe(input: createRecipeInput! @spread): Recipe!
+    createRecipe(input: createRecipeInput! @spread): Recipe! @create @can(ability: "create", injectArgs: true)
+
+    "Actualiza una Receta Ya Existente"
+    updateRecipe(
+        id: ID!,
+        title: String
+        description: String
+        image_pf_path: Upload
+        origen_food: String
+        time_food: String
+        diet: String
+        prep_time: Float,
+        calories: Float,
+        fat: Float,
+        carbs: Float,
+        proteins: Float
+    ): Recipe! @update @can(ability: "update", find: "id")
+
+    "Elimina una Receta"
+    deleteRecipe(id: ID @whereKey): Recipe! @delete @can(ability: "delete", find:"id")
+
+    createStep(input: createStepInput! @spread): Step! @create @can(ability: "create", injectArgs: true)
 }
 
 "Account of a person who utilizes this application."
@@ -63,6 +116,43 @@ type User {
 
     "La fecha de cumpleaños"
     birthday: Date!
+
+    "Tiene muchas tareas"
+    recipes:[Recipe!]! @hasMany
+}
+
+"Receta"
+type Recipe {
+    "Id"
+    id: ID!
+    "Titulo de la receta"
+    title: String!
+    "Descripcion de la receta"
+    description: String
+    "Imagen principal de la receta"
+    image_pf_path: String
+    "De donde es la Receta. Ej, Mexicana"
+    origen_food: origen!
+    "En que tiempo es la receta. Ej, Desayuno"
+    time_food: time!
+    "Tipo de dieta de la receta. Ej, Omnivoro"
+    diet: diet!
+    "Tiempo de preparación de la receta en Float."
+    prep_time: Float!,
+    "Cantidad de calorias que contiene la receta"
+    calories: Float,
+    "Cantidad de grasas que contiene la receta"
+    fat: Float,
+    "Cantidad de carbohidratos que contiene la receta"
+    carbs: Float,
+    "Cantidad de proteinas que contiene la receta"
+    proteins: Float,
+    "Calificación promedio de la receta"
+    rate: Float
+    "El usuario que creo la receta"
+    user: User @belongsTo
+    "Los pasos"
+    steps: [Step!]! @hasMany
 }
 
 "Sesión"
@@ -73,32 +163,24 @@ type Session {
     accessToken: String
 }
 
-"Receta"
-type Recipe {
-    "Titulo de la receta"
-    title: String!
-    "Descripcion de la receta"
-    description: String
-    "Imagen principal de la receta"
-    image_pf_path: String!
-    "De donde es la Receta. Ej, Mexicana"
-    origen_food: origen!
-    "En que tiempo es la receta. Ej, Desayuno"
-    time_food: time!
-    "Tipo de dieta de la receta. Ej, Omnivoro"
-    diet: diet!
-    "Tiempo de preparación de la receta en float."
-    prep_time: float!
-    "Cantidad de calorias que contiene la receta"
-    calories: float
-    "Cantidad de grasas que contiene la receta"
-    fat: float
-    "Cantidad de carbohidratos que contiene la receta"
-    carbs: float
-    "Cantidad de proteinas que contiene la receta"
-    proteins: float
-    "Calificación promedio de la receta"
-    rate: float!
+"Comentarios"
+type Comment {
+    "Id"
+    id: ID!
+    "Comentario"
+    commentario: String!
+    "Calificacion"
+    rating: Float,
+    "receta"
+    Recipe: Recipe @belongsTo
+}
+
+type Step {
+    "descripcion"
+    description: String!
+    "Direccion de Imagen"
+    imagen_path: String
+    Recipe: Recipe! @belongsTo
 }
 
 input createUserInput @validator {
@@ -114,6 +196,16 @@ input createUserInput @validator {
     birthday: Date!
 }
 
+input CreateUserBelongsTo {
+    connect: ID
+    create: createUserInput
+}
+
+input CreateRecipeBelongsTo {
+    connect: ID
+    create: createRecipeInput
+}
+
 input loginInput {
     "Un correo electronico valido"
     email: String!
@@ -127,7 +219,7 @@ input createRecipeInput @validator {
     "descripcion de la receta"
     description: String
     "Imagen Principal de la receta"
-    image_pf_path: Upload!
+    image_pf_path: Upload
     "Origen de comida. Ej, Mexicana"
     origen_food: String!
     "Tiempo de comida. Ej, Desayuno"
@@ -135,15 +227,30 @@ input createRecipeInput @validator {
     "Tipo de dieta. Ej. Vegano"
     diet: String!
     "Tiempo de preparacion para la receta"
-    prep_time: float
+    prep_time: Float,
     "Cantidad de calorias en la receta"
-    calories: float
+    calories: Float,
     "Cantidad de grasas en la receta"
-    fat: float
+    fat: Float,
     "Cantidad de carbohidratos en la receta"
-    carbs: float
+    carbs: Float,
     "cantidad de proteinas en la receta"
-    proteins: float
+    proteins: Float
+    "El usuario que creo la receta"
+    user: CreateUserBelongsTo
+}
+
+input createRecipeHasMany {
+    create:[createRecipeInput!]!
+}
+
+input createStepHasMany {
+    create:[createStepInput!]!
+}
+
+input createStepInput {
+    description: String! @rules(apply: ["string", "max:250"])
+    recipe: CreateRecipeBelongsTo
 }
 
 "Tipos de comida, dependiendo de su origen"
@@ -157,7 +264,6 @@ enum origen
     Italiana @enum(value: "Italiana")
     "Comida China."
     China @enum(valie: "China")
-    "Se iran agregando más tipos de comida"
 }
 
 "Los tiempos de la comida. Ej, Desayuno."
@@ -176,9 +282,9 @@ enum time
 enum diet
 {
     "Dieta Omnivora"
-    Omnivoro @enum(value "Omnivoro")
+    Omnivoro @enum(value: "Omnivoro")
     "Dieta Ovo-Lactea Vegetariana"
-    OLV @enum(value "Ovo-lacteo Vegetariano")
+    OLV @enum(value: "OLV")
     "Dieta vegetariana"
     Vegetariano @enum(value: "Vegetariano")
     "Dieta Crudivegana"
