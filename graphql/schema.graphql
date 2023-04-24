@@ -39,6 +39,16 @@ type Query {
         rate: Float @where(operator: "=")
     ): [Recipe!]! @paginate(defaultCount: 10) #@whereAuth(relation: "user")
 
+    step(
+        "search by primary key"
+        id: ID @eq @rules(apply: ["prohibits:description", "required_without:description"])
+    ): Step @find
+
+    steps(
+        "filters by recipe. Accepts SQL LIKE wildcards '%' and '_'."
+        description: String
+    ): [Step!]! @paginate(defaultCount: 10)
+
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
 }
@@ -46,16 +56,22 @@ type Query {
 type Mutation {
     "Crea un Usuario Nuevo"
     createUser(input: createUserInput! @spread): User!
+
     "Actualiza un Usuario Ya Existente"
     updateUser(id: ID!, email: String, password: String): User! @update
+
     "Elimina un Usuario"
     deleteUser(id: ID @whereKey): User! @delete
+
     "Mutación para Iniciar Sesión en la App Web"
     login(input: loginInput! @spread): Session!
+
     "Mutación para Cerrar Sesión"
     logout: Session!
+
     "Mutación para crear receta"
     createRecipe(input: createRecipeInput! @spread): Recipe! @create @can(ability: "create", injectArgs: true)
+
     "Actualiza una Receta Ya Existente"
     updateRecipe(
         id: ID!,
@@ -71,8 +87,11 @@ type Mutation {
         carbs: Float,
         proteins: Float
     ): Recipe! @update @can(ability: "update", find: "id")
+
     "Elimina una Receta"
     deleteRecipe(id: ID @whereKey): Recipe! @delete @can(ability: "delete", find:"id")
+
+    createStep(input: createStepInput! @spread): Step! @create @can(ability: "create", injectArgs: true)
 }
 
 "Account of a person who utilizes this application."
@@ -132,6 +151,8 @@ type Recipe {
     rate: Float
     "El usuario que creo la receta"
     user: User @belongsTo
+    "Los pasos"
+    steps: [Step!]! @hasMany
 }
 
 "Sesión"
@@ -156,10 +177,10 @@ type Comment {
 
 type Step {
     "descripcion"
-    descripcion: String!
+    description: String!
     "Direccion de Imagen"
     imagen_path: String
-    Recipe: Recipe @belongsTo
+    Recipe: Recipe! @belongsTo
 }
 
 input createUserInput @validator {
@@ -178,6 +199,11 @@ input createUserInput @validator {
 input CreateUserBelongsTo {
     connect: ID
     create: createUserInput
+}
+
+input CreateRecipeBelongsTo {
+    connect: ID
+    create: createRecipeInput
 }
 
 input loginInput {
@@ -216,6 +242,15 @@ input createRecipeInput @validator {
 
 input createRecipeHasMany {
     create:[createRecipeInput!]!
+}
+
+input createStepHasMany {
+    create:[createStepInput!]!
+}
+
+input createStepInput {
+    description: String! @rules(apply: ["string", "max:250"])
+    recipe: CreateRecipeBelongsTo
 }
 
 "Tipos de comida, dependiendo de su origen"
