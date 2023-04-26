@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Comment;
 use App\Models\Recipe;
-use App\Models\Step;
 
-final class CreateStep
+final class CreateComment
 {
     /**
      * @param  null  $_
@@ -15,9 +15,10 @@ final class CreateStep
     {
         // TODO implement the resolver
         $recipe = Recipe::findOrFail($args['recipe_id']);
-        $step = new Step();
-        $step->description = $args['description'];
-        $recipe->steps()->save($step);
-        return $step;
+        $comment = new Comment();
+        $comment->comentario = $args['comentario'];
+        $comment->rating = $args['rating'];
+        $recipe->comments()->save($comment);
+        return $comment;
     }
 }
