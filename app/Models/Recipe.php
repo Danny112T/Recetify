@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Recipe extends Model
 {
@@ -15,7 +16,6 @@ class Recipe extends Model
         'user_id',
         'title',
         'description',
-        'image_pf_path',
         'origen_food',
         'time_food',
         'diet',
@@ -38,5 +38,9 @@ class Recipe extends Model
 
     public function comments(): HasMany {
         return $this->hasMany('App\Models\Comment');
+    }
+
+    public function image(): MorphOne {
+        return $this->morphOne('App\Models\Images','imageable');
     }
 }

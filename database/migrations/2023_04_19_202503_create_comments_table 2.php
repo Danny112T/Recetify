@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cat_ingredients', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('image_path')->nullable();
-            $table->float('calories')->nullable();
-            $table->float('fat')->nullable();
-            $table->float('carbs')->nullable();
-            $table->float('proteins')->nullable();
+            $table->integer('recipe_id')->unsigned();
+            $table->string('comentario');
+            $table->float('rating')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cat_ingredients');
+        Schema::dropIfExists('comments');
     }
 };

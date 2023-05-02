@@ -99,6 +99,9 @@ type Mutation {
         porcion: Float,
     ): Recipe! @update @can(ability: "update", find: "id")
 
+    "Subir imagen una receta"
+    uploadImageRecipe(image: Upload!, id: ID!): Recipe!
+
     "Elimina una Receta"
     deleteRecipe(id: ID! @whereKey): Recipe! @delete @can(ability: "delete", find:"id")
 
@@ -107,6 +110,9 @@ type Mutation {
 
     "actualizar un paso ya existente"
     updateStep(id: ID!, description: String): Step! @update @can(ability: "update", find: "id")
+
+    "Subir imagen un paso"
+    uploadImageStep(image: Upload!, id: ID!): Step!
 
     "eliminar un paso"
     deleteStep(id: ID! @whereKey): Step! @delete @can(ability: "delete", find: "id")
@@ -160,7 +166,7 @@ type Recipe {
     "Descripcion de la receta"
     description: String
     "Imagen principal de la receta"
-    image_pf_path: String
+    image: Image! @morphOne
     "De donde es la Receta. Ej, Mexicana"
     origen_food: origen!
     "En que tiempo es la receta. Ej, Desayuno"
@@ -178,10 +184,9 @@ type Recipe {
     "Cantidad de proteinas que contiene la receta"
     proteins: Float,
     "Calificación promedio de la receta"
-    rate: Float!,
+    rate: Float,
     "Cuantas Porciones o para cuantas personas alcanza la receta."
     porcion: Float!,
-
     "El usuario que creo la receta"
     user: User @belongsTo
     "Los pasos"
@@ -213,9 +218,17 @@ type Comment {
 type Step {
     "descripcion"
     description: String!
-    "Direccion de Imagen"
-    imagen_path: String
+    "Imagen del paso"
+    image: Image! @morphOne
+    "Receta"
     Recipe: Recipe! @belongsTo
+}
+
+type Image {
+    "Ruta de la imagen"
+    url: String!
+    "Tipo de la imagen"
+    imageable: Imageable! @morphTo
 }
 
 input createUserInput @validator {
@@ -253,8 +266,6 @@ input createRecipeInput @validator {
     title: String!
     "descripcion de la receta"
     description: String
-    "Imagen Principal de la receta"
-    image_pf_path: Upload
     "Origen de comida. Ej, Mexicana"
     origen_food: String!
     "Tiempo de comida. Ej, Desayuno"
@@ -333,3 +344,5 @@ enum diet
     "Dieta Crudivegana"
     Crudivegetariana @enum(value: "Crudivegetariana")
 }
+
+union Imageable = Recipe | Step

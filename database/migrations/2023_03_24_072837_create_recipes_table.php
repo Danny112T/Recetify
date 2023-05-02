@@ -35,7 +35,7 @@ return new class extends Migration
             $table->float('fat')->nullable();
             $table->float('carbs')->nullable();
             $table->float('proteins')->nullable();
-            $table->float('rate')->startingValue(5.00)->nullable();
+            $table->float('rate')->nullable();
             $table->timestamps();
         });
     }
