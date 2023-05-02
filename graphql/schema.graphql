@@ -299,7 +299,7 @@ enum origen
     "Comida Italiana."
     Italiana @enum(value: "Italiana")
     "Comida China."
-    China @enum(valie: "China")
+    China @enum(value: "China")
 }
 
 "Los tiempos de la comida. Ej, Desayuno."
