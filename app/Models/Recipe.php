@@ -25,6 +25,7 @@ class Recipe extends Model
         'carbs',
         'proteins',
         'rate',
+        'porcion',
     ];
 
     public function user(): BelongsTo {

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('recipe', function (Blueprint $table) {
+        Schema::table('recipes', function (Blueprint $table) {
             //
+            $table->float('porcion')->nullable();
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('recipe', function (Blueprint $table) {
+        Schema::table('recipes', function (Blueprint $table) {
             //
+            $table->dropColumn('porcion')->nullable();
         });
     }
 };

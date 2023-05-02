@@ -37,6 +37,7 @@ type Query {
         prep_time: Float @where(operator: "=")
         calories: Float @where(operator: "=")
         rate: Float @where(operator: "=")
+        porcion: Float @where(operator: "=")
     ): [Recipe!]! @paginate(defaultCount: 10) #@whereAuth(relation: "user")
 
     step(
@@ -94,7 +95,8 @@ type Mutation {
         calories: Float,
         fat: Float,
         carbs: Float,
-        proteins: Float
+        proteins: Float,
+        porcion: Float,
     ): Recipe! @update @can(ability: "update", find: "id")
 
     "Elimina una Receta"
@@ -176,7 +178,10 @@ type Recipe {
     "Cantidad de proteinas que contiene la receta"
     proteins: Float,
     "Calificación promedio de la receta"
-    rate: Float
+    rate: Float!,
+    "Cuantas Porciones o para cuantas personas alcanza la receta."
+    porcion: Float!,
+
     "El usuario que creo la receta"
     user: User @belongsTo
     "Los pasos"
@@ -265,7 +270,9 @@ input createRecipeInput @validator {
     "Cantidad de carbohidratos en la receta"
     carbs: Float,
     "cantidad de proteinas en la receta"
-    proteins: Float
+    proteins: Float,
+    "Cuantas Porciones o para cuantas personas alcanza la receta."
+    porcion: Float!,
     "El usuario que creo la receta"
     user: CreateUserBelongsTo
 }

@@ -25,6 +25,7 @@ final class CreateRecipe
         $recipe->fat = $args['fat'];
         $recipe->carbs = $args['carbs'];
         $recipe->proteins = $args['proteins'];
+        $recipe->porcion = $args['porcion'];
         $recipe->rate = 5.0;
         $user->recipes()->save($recipe);
         return $recipe;
