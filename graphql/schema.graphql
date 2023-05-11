@@ -60,6 +60,16 @@ type Query {
         comentario: String
     ): [Comment!]! @paginate(defaultCount: 10)
 
+    cat_ingredientes: [cat_ingrediente] @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
+
+    cat_ingrediente(
+    "   Search by primary key."
+        id: ID @eq @rules(apply: ["prohibits:name", "required_without:name"])
+
+        "Search by name address."
+        name: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
+    ): cat_ingrediente @find(model:"App\\Models\\Cat_ingredient")
+
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
 }
@@ -231,6 +241,15 @@ type Image {
     imageable: Imageable! @morphTo
 }
 
+type cat_ingrediente {
+    "Id"
+    id: ID!
+    "Nombre del ingrediente"
+    name: String!
+    "imagen del ingrediente"
+    image: Image @morphOne
+}
+
 input createUserInput @validator {
     "Nombre del usuario"
     name: String!
@@ -313,7 +332,7 @@ enum origen
     "Comida Mexiana."
     Mexicana @enum(value: "Mexicana")
     "Comida Americana."
-    Americana @enum(vaule: "Americana")
+    Americana @enum(value: "Americana")
     "Comida Italiana."
     Italiana @enum(value: "Italiana")
     "Comida China."
@@ -345,4 +364,4 @@ enum diet
     Crudivegetariana @enum(value: "Crudivegetariana")
 }
 
-union Imageable = Recipe | Step
+union Imageable = Recipe | Step | cat_ingrediente
