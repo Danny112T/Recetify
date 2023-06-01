@@ -13,7 +13,7 @@ class AllergyService
     {
         $user = User::find($userId);
         $allergy = Cat_ingredient::find($ingredientId);
-        $user->cat_ingredientes()->attach($allergy);
+        $user->cat_ingredients()->attach($allergy);
         return $allergy;
     }
 
@@ -21,7 +21,7 @@ class AllergyService
     {
         $user = User::find($userId);
         $allergy = Cat_ingredient::find($ingredientId);
-        $user->cat_ingredientes()->detach($allergy);
+        $user->cat_ingredients()->detach($allergy);
         return $allergy;
     }
 }

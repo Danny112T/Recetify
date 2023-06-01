@@ -45,8 +45,8 @@ class Recipe extends Model
         return $this->morphOne('App\Models\Images','imageable');
     }
 
-    public function cat_ingredientes(): BelongsToMany
+    public function cat_ingredients(): BelongsToMany
     {
-        return $this->belongsToMany(Cat_ingredient::class);
+        return $this->belongsToMany(Cat_ingredient::class)->withPivot(['quantity','unit']);
     }
 }

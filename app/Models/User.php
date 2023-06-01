@@ -52,7 +52,7 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Recipe');
     }
 
-    public function cat_ingredientes(): BelongsToMany
+    public function cat_ingredients(): BelongsToMany
     {
         return $this->belongsToMany(Cat_ingredient::class);
     }

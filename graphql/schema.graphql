@@ -60,15 +60,15 @@ type Query {
         comentario: String
     ): [Comment!]! @paginate(defaultCount: 10)
 
-    cat_ingredientes: [cat_ingrediente!]! @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
+    cat_ingredients: [cat_ingredient!]! @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
 
-    cat_ingrediente(
+    cat_ingredient(
     "   Search by primary key."
         id: ID @eq @rules(apply: ["prohibits:name", "required_without:name"])
 
         "Search by name address."
         name: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
-    ): cat_ingrediente @find(model:"App\\Models\\Cat_ingredient")
+    ): cat_ingredient @find(model:"App\\Models\\Cat_ingredient")
 
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
@@ -137,16 +137,16 @@ type Mutation {
     deleteComment(id: ID! @whereKey): Comment! @delete @can(ability: "delete", find: "id")
 
     "agregar una alergia a un usuario"
-    addAllergytoUser(id: ID!): cat_ingrediente @field(resolver:"App\\GraphQL\\Mutations\\AddAllergytoUser")
+    addAllergytoUser(id: ID!): cat_ingredient @field(resolver:"App\\GraphQL\\Mutations\\AddAllergytoUser")
 
     "Eliminar una alergia de un usuario"
-    removeAllergytoUser(id: ID!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\RemoveAllergytoUser")
+    removeAllergytoUser(id: ID!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveAllergytoUser")
 
     "agregar un ingrediente a una receta"
-    addIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!, quantity: Float!, unit: unittype!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\AddIngredienttoRecipe")
+    addIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!, quantity: Float!, unit: unittype!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\AddIngredienttoRecipe")
 
     "eliminar un ingrediente a una receta"
-    removeIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
+    removeIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
 }
 
 "Account of a person who utilizes this application."
@@ -179,7 +179,7 @@ type User {
     recipes:[Recipe!]! @hasMany
 
     "Tiene Muchas alergias"
-    cat_ingredientes: [cat_ingrediente!]! @belongsToMany
+    cat_ingredients: [cat_ingredient!]! @belongsToMany
 }
 
 "Receta"
@@ -219,7 +219,7 @@ type Recipe {
     "Comentarios de la receta"
     Comments: [Comment!]! @hasMany
     "Ingredientes de la receta"
-    cat_ingredientes: [cat_ingrediente!]!@belongsToMany
+    cat_ingredients: [cat_ingredient!]!@belongsToMany
 }
 
 "Sesión"
@@ -258,13 +258,22 @@ type Image {
     imageable: Imageable! @morphTo
 }
 
-type cat_ingrediente {
+type cat_ingredient {
     "Id"
     id: ID!
     "Nombre del ingrediente"
     name: String!
     "imagen del ingrediente"
     image: Image @morphOne
+    pivot: IngredientRecipePivot
+}
+
+type IngredientRecipePivot
+{
+    "Cantidad del ingrediente en la receta"
+    quantity: Float,
+    "Unidad de la receta"
+    unit: unittype!
 }
 
 input createUserInput @validator {
@@ -391,4 +400,4 @@ enum unittype
     unidad @enum(value: "unit")
 }
 
-union Imageable = Recipe | Step | cat_ingrediente
+union Imageable = Recipe | Step | cat_ingredient

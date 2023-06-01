@@ -31,6 +31,6 @@ class Cat_ingredient extends Model
 
     public function recipes(): BelongsToMany
     {
-        return $this->belongsToMany(Cat_ingredient::class);
+        return $this->belongsToMany(Cat_ingredient::class)->withPivot(['quantity','unit']);
     }
 }

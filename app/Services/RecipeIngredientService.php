@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cat_ingredient;
 use App\Models\Recipe;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RecipeIngredientService
 {
@@ -13,7 +14,7 @@ class RecipeIngredientService
     {
         $user = Recipe::find($recipeId);
         $ingredient = Cat_ingredient::find($ingredientId);
-        $user->cat_ingredientes()->attach($ingredient, ['quantity'=>$quantity, 'unit'=>$unit]); // FIXME: que retorne el ingrediente y el valor pivote
+        $user->cat_ingredients()->attach($ingredient, ['quantity'=>$quantity, 'unit'=>$unit]); // FIXME: que retorne el ingrediente y el valor pivote
         return $ingredient;
     }
 
@@ -21,7 +22,7 @@ class RecipeIngredientService
     {
         $user = Recipe::find($recipeId);
         $ingredient = Cat_ingredient::find($ingredientId);
-        $user->cat_ingredientes()->detach($ingredient);
+        $user->cat_ingredients()->detach($ingredient);
         return $ingredient;
     }
 }

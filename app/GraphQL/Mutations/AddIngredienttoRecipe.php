@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Recipe;
 use App\Services\RecipeIngredientService;
+use Illuminate\Support\Facades\Log;
 
 final class AddIngredienttoRecipe
 {
@@ -18,6 +19,10 @@ final class AddIngredienttoRecipe
         $quantity = $args['quantity'];
         $unit = $args['unit'];
         $attach = RecipeIngredientService::AddIngredienttoRecipe($recipe->id, $ingredient, $quantity, $unit);
+        $pivotQ = $attach->pivot->quantity;
+        $pivotU = $attach->pivot->unit;
         return $attach;
-        }
+        return $pivotQ;
+        return $pivotU;
+    }
 }
