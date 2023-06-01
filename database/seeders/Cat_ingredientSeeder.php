@@ -466,7 +466,16 @@ class Cat_ingredientSeeder extends Seeder
         $ingredient->save();
         $image->save();
 
-
+        // Agua
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Agua';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/agua.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
 
 

@@ -60,7 +60,7 @@ type Query {
         comentario: String
     ): [Comment!]! @paginate(defaultCount: 10)
 
-    cat_ingredientes: [cat_ingrediente] @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
+    cat_ingredientes: [cat_ingrediente!]! @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
 
     cat_ingrediente(
     "   Search by primary key."
@@ -135,6 +135,18 @@ type Mutation {
 
     "eliminar un comentario"
     deleteComment(id: ID! @whereKey): Comment! @delete @can(ability: "delete", find: "id")
+
+    "agregar una alergia a un usuario"
+    addAllergytoUser(id: ID!): cat_ingrediente @field(resolver:"App\\GraphQL\\Mutations\\AddAllergytoUser")
+
+    "Eliminar una alergia de un usuario"
+    removeAllergytoUser(id: ID!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\RemoveAllergytoUser")
+
+    "agregar un ingrediente a una receta"
+    addIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!, quantity: Float!, unit: unittype!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\AddIngredienttoRecipe")
+
+    "eliminar un ingrediente a una receta"
+    removeIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!): cat_ingrediente @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
 }
 
 "Account of a person who utilizes this application."
@@ -165,6 +177,9 @@ type User {
 
     "Tiene muchas tareas"
     recipes:[Recipe!]! @hasMany
+
+    "Tiene Muchas alergias"
+    cat_ingredientes: [cat_ingrediente!]! @belongsToMany
 }
 
 "Receta"
@@ -203,6 +218,8 @@ type Recipe {
     steps: [Step!]! @hasMany
     "Comentarios de la receta"
     Comments: [Comment!]! @hasMany
+    "Ingredientes de la receta"
+    cat_ingredientes: [cat_ingrediente!]!@belongsToMany
 }
 
 "Sesión"
@@ -362,6 +379,16 @@ enum diet
     Vegetariano @enum(value: "Vegetariano")
     "Dieta Crudivegana"
     Crudivegetariana @enum(value: "Crudivegetariana")
+}
+
+enum unittype
+{
+    "Gramos"
+    g @enum(value: "g")
+    "MiliLitos"
+    ml @enum(value: "ml")
+    "unidad"
+    unidad @enum(value: "unit")
 }
 
 union Imageable = Recipe | Step | cat_ingrediente
