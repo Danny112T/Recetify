@@ -19,10 +19,6 @@ final class AddIngredienttoRecipe
         $quantity = $args['quantity'];
         $unit = $args['unit'];
         $attach = RecipeIngredientService::AddIngredienttoRecipe($recipe->id, $ingredient, $quantity, $unit);
-        $pivotQ = $attach->pivot->quantity;
-        $pivotU = $attach->pivot->unit;
         return $attach;
-        return $pivotQ;
-        return $pivotU;
     }
 }
