@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
             'password'=>Hash::make('Dantov11!'),
             'birthday'=>'2002-02-11',
             'created_at'=>now(),
+            'email_verified_at'=>now(),
         ]);
 
         DB::table('users')->insert([
@@ -28,8 +29,9 @@ class UsersSeeder extends Seeder
             'lastname'=>'Murillo',
             'email'=>'Mich@email.com',
             'password'=>Hash::make('MichMur01!'),
-            'birthday'=>'2002-12-21',
+            'birthday'=>'2002-08-13',
             'created_at'=>now(),
+            'email_verified_at'=>now(),
         ]);
 
         DB::table('users')->insert([
@@ -37,8 +39,9 @@ class UsersSeeder extends Seeder
             'lastname'=>'Moreno',
             'email'=>'Cmarquez@email.com',
             'password'=>Hash::make('Marquez01!'),
-            'birthday'=>'2002-12-21',
+            'birthday'=>'2002-03-08',
             'created_at'=>now(),
+            'email_verified_at'=>now(),
         ]);
     }
 }

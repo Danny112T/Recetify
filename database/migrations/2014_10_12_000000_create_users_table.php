@@ -21,7 +21,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->date('birthday');
             $table->timestamps();
-            $table->foreignId('preferences_id')->nullable();
         });
     }
 
