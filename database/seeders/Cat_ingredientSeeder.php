@@ -477,47 +477,158 @@ class Cat_ingredientSeeder extends Seeder
         $ingredient->save();
         $image->save();
 
+        // Queso
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Queso';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/queso.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // trigo
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'trigo';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/trigo.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Soja
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Soja';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/soja.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Almendras
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'almendras';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/almendras.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // nueces
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Nueces';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/nueces.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Mostaza
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Mostaza';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/mostaza.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Apio
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Apio';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/apio.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Kiwi
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Kiwi';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/kiwi.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Mango
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Mango';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/mango.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Melón
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Melón';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/melon.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Fresas
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Fresas';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/fresas.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Maíz
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Maíz';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/maiz.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
+        // Chocolate
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Chocolate';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/chocolate.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // Cacahuate
+        $ingredient = new Cat_ingredient();
+        $ingredient->name = 'Cacahuate';
+        $ingredient->save();
+        $image = new Images();
+        $image->url = 'public/saved/cacahuate.png';
+        $image->imageable_id = $ingredient->id;
+        $image->imageable_type = 'App\Models\Cat_ingredient';
+        $ingredient->save();
+        $image->save();
     }
 }
