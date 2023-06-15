@@ -49,4 +49,9 @@ class Recipe extends Model
     {
         return $this->belongsToMany(Cat_ingredient::class)->withPivot(['quantity','unit']);
     }
+
+    public function favoriteby(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -70,6 +70,8 @@ type Query {
         name: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
     ): cat_ingredient @find(model:"App\\Models\\Cat_ingredient")
 
+    favorites: [Recipe!]! @paginate(resolver: "App\\GraphQL\\Queries\\Favorites")
+
     "Regresa el Usuario Actual Loggeado"
     me: User! @guard @auth
 }
@@ -94,20 +96,7 @@ type Mutation {
     createRecipe(input: createRecipeInput! @spread): Recipe! @create @can(ability: "create", injectArgs: true)
 
     "Actualiza una Receta Ya Existente"
-    updateRecipe(
-        id: ID!,
-        title: String
-        description: String
-        origen_food: String
-        time_food: String
-        diet: String
-        prep_time: Float,
-        calories: Float,
-        fat: Float,
-        carbs: Float,
-        proteins: Float,
-        porcion: Float,
-    ): Recipe! @update @can(ability: "update", find: "id")
+    updateRecipe(input: updateRecipeInput! @spread): Recipe! @update @can(ability: "update", find: "id")
 
     "Subir imagen una receta"
     uploadImageRecipe(image: Upload!, id: ID!): Recipe!
@@ -147,6 +136,12 @@ type Mutation {
 
     "eliminar un ingrediente a una receta"
     removeIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
+
+    "Agregar una receta a favoritos"
+    addRecipeToFavorites(id: ID!): Recipe @field(resolver: "App\\GraphQL\\Mutations\\AddRecipeToFavorites")
+
+    "Eliminar una receta de favoritos"
+    removeRecipeToFavorites(id: ID!): Recipe @field(resolver: "App\\GraphQL\\Mutations\\RemoveRecipeToFavorites")
 }
 
 "Account of a person who utilizes this application."
@@ -180,6 +175,9 @@ type User {
 
     "Tiene Muchas alergias"
     cat_ingredients: [cat_ingredient!]! @belongsToMany
+
+    "Tiene Muchas recetas favoritas"
+    favoriteRecipes: [Recipe!]! @belongsToMany
 }
 
 "Receta"
@@ -220,6 +218,8 @@ type Recipe {
     Comments: [Comment!]! @hasMany
     "Ingredientes de la receta"
     cat_ingredients: [cat_ingredient!]!@belongsToMany
+    "Recetas favoritas"
+    favoriteby: [User!]! @belongsToMany
 }
 
 "Sesión"
@@ -331,6 +331,21 @@ input createRecipeInput @validator {
     porcion: Float!,
     "El usuario que creo la receta"
     user: CreateUserBelongsTo
+}
+
+input updateRecipeInput {
+    id: ID!
+    title: String
+    description: String
+    origen_food: String
+    time_food: String
+    diet: String
+    prep_time: Float
+    calories: Float
+    fat: Float
+    carbs: Float
+    proteins: Float
+    porcion: Float
 }
 
 input createRecipeHasMany {

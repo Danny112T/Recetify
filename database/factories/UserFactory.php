@@ -20,7 +20,7 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $hasAllergy = $this->faker->boolean(10);
             if ($hasAllergy) {
-                $cat_ingredients = Cat_ingredient::find($this->faker->numberBetween(1, 41));
+                $cat_ingredients = Cat_ingredient::find($this->faker->numberBetween(1, 56));
                 $user->cat_ingredients()->attach($cat_ingredients);
             }
         });
