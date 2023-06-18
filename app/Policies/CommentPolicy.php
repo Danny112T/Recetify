@@ -14,8 +14,8 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        //return Auth::user()->id == $user->id;
-        return true;
+        return Auth::user()->id == $user->id;
+        //return true;
     }
 
     /**
