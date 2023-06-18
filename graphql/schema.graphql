@@ -117,7 +117,7 @@ type Mutation {
     deleteStep(id: ID! @whereKey): Step! @delete @can(ability: "delete", find: "id")
 
     "crear un comentario en una receta"
-    createComment(input: createCommentInput! @spread): Comment! @create @can(ability: "create", injectArgs: true)
+    createComment(input: createCommentInput! @spread): Comment! @field(resolver:"App\\GraphQL\\Mutations\\CreateComment") @can(ability: "create", injectArgs: true)
 
     "actualizar un comentario ya existente"
     updateComment(id: ID!, comentario: String, rating: Float): Comment! @update @can(ability: "update", find: "id")
@@ -240,6 +240,8 @@ type Comment {
     rating: Float,
     "receta"
     Recipe: Recipe! @belongsTo
+    "Author"
+    user: User! @belongsTo
 }
 
 type Step {
