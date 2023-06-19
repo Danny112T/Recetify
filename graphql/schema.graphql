@@ -20,7 +20,7 @@ type Query {
     users(
       "Filters by name. Accepts SQL LIKE wildcards `%` and `_`."
       name: String @where(operator: "like")
-    ): [User!]! @paginate(defaultCount: 10)
+    ): [User!]! @paginate(defaultCount: 200)
 
     "Find a single Recipe by an identifying attribute."
     recipe(
@@ -38,7 +38,7 @@ type Query {
         calories: Float @where(operator: "=")
         rate: Float @where(operator: "=")
         porcion: Float @where(operator: "=")
-    ): [Recipe!]! @paginate(defaultCount: 10) #@whereAuth(relation: "user")
+    ): [Recipe!]! @paginate(defaultCount: 300) #@whereAuth(relation: "user")
 
     step(
         "search by primary key"
@@ -48,19 +48,16 @@ type Query {
     steps(
         "filters by recipe. Accepts SQL LIKE wildcards '%' and '_'."
         description: String
-    ): [Step!]! @paginate(defaultCount: 10)
+    ): [Step!]! @paginate(defaultCount: 300)
 
     Comment(
         "search by primary key"
         id: ID @eq @rules(apply: ["prohibits:comentario", "required_without:comentario"])
     ): Comment @find
 
-    Comments(
-        "filters by recipe. Accepts SQL LIKE wildcards '%' and '_'."
-        comentario: String
-    ): [Comment!]! @paginate(defaultCount: 10)
+    Comments: [Comment!]! @paginate(defaultCount: 200)
 
-    cat_ingredients: [cat_ingredient!]! @paginate(defaultCount: 10, model:"App\\Models\\Cat_ingredient")
+    cat_ingredients: [cat_ingredient!]! @paginate(defaultCount: 60, model:"App\\Models\\Cat_ingredient")
 
     cat_ingredient(
     "   Search by primary key."
@@ -120,7 +117,7 @@ type Mutation {
     createComment(input: createCommentInput! @spread): Comment! @field(resolver:"App\\GraphQL\\Mutations\\CreateComment") @can(ability: "create", injectArgs: true)
 
     "actualizar un comentario ya existente"
-    updateComment(id: ID!, comentario: String, rating: Float): Comment! @update @can(ability: "update", find: "id")
+    updateComment(input: updateCommentInput! @spread): Comment! @update @can(ability: "update", find: "id")
 
     "eliminar un comentario"
     deleteComment(id: ID! @whereKey): Comment! @delete @can(ability: "delete", find: "id")
@@ -132,10 +129,10 @@ type Mutation {
     removeAllergytoUser(id: ID!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveAllergytoUser")
 
     "agregar un ingrediente a una receta"
-    addIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!, quantity: Float!, unit: unittype!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\AddIngredienttoRecipe")
+    addIngredienttoRecipe(input: addIngredienttoRecipeInput! @spread): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\AddIngredienttoRecipe")
 
     "eliminar un ingrediente a una receta"
-    removeIngredienttoRecipe(id_recipe: ID!, id_ingredient: ID!): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
+    removeIngredienttoRecipe(input: removeIngredienttoRecipeInput! @spread): cat_ingredient @field(resolver: "App\\GraphQL\\Mutations\\RemoveIngredienttoRecipe")
 
     "Agregar una receta a favoritos"
     addRecipeToFavorites(id: ID!): Recipe @field(resolver: "App\\GraphQL\\Mutations\\AddRecipeToFavorites")
@@ -220,6 +217,10 @@ type Recipe {
     cat_ingredients: [cat_ingredient!]!@belongsToMany
     "Recetas favoritas"
     favoriteby: [User!]! @belongsToMany
+    "When the account was created."
+    created_at: DateTime!
+    "When the account was last updated."
+    updated_at: DateTime!
 }
 
 "Sesión"
@@ -242,15 +243,27 @@ type Comment {
     Recipe: Recipe! @belongsTo
     "Author"
     user: User! @belongsTo
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
 }
 
 type Step {
+    "Id"
+    id: ID!
     "descripcion"
     description: String!
     "Imagen del paso"
     image: Image! @morphOne
     "Receta"
     Recipe: Recipe! @belongsTo
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
 }
 
 type Image {
@@ -268,6 +281,11 @@ type cat_ingredient {
     "imagen del ingrediente"
     image: Image @morphOne
     pivot: IngredientRecipePivot
+    "When the account was created."
+    created_at: DateTime!
+
+    "When the account was last updated."
+    updated_at: DateTime!
 }
 
 type IngredientRecipePivot
@@ -313,11 +331,11 @@ input createRecipeInput @validator {
     title: String!
     "descripcion de la receta"
     description: String
-    "Origen de comida. Ej, Mexicana"
+    "Origen de comida. Ej, Mexicana, China, Americana, Italiana"
     origen_food: String!
-    "Tiempo de comida. Ej, Desayuno"
+    "Tiempo de comida. Ej, Desayuno, Comida, Cena, Colacion"
     time_food: String!
-    "Tipo de dieta. Ej. Vegano"
+    "Tipo de dieta. Ej. OLV, Omnivoro, Vegetariano, Crudivegana"
     diet: String!
     "Tiempo de preparacion para la receta"
     prep_time: Float,
@@ -369,6 +387,24 @@ input createCommentInput {
     recipe: CreateRecipeBelongsTo
 }
 
+input updateCommentInput {
+    id: ID!
+    comentario: String
+    rating: Float
+}
+
+input addIngredienttoRecipeInput {
+    id_recipe: ID!
+    id_ingredient: ID!
+    quantity: Float!
+    unit: unittype!
+}
+
+input removeIngredienttoRecipeInput {
+    id_recipe: ID!
+    id_ingredient: ID!
+}
+
 "Tipos de comida, dependiendo de su origen"
 enum origen
 {
@@ -404,7 +440,7 @@ enum diet
     "Dieta vegetariana"
     Vegetariano @enum(value: "Vegetariano")
     "Dieta Crudivegana"
-    Crudivegetariana @enum(value: "Crudivegetariana")
+    Crudivegana @enum(value: "Crudivegana")
 }
 
 enum unittype
